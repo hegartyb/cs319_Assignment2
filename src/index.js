@@ -4,17 +4,15 @@
 *Pop-up payment information
 *Video
 */
-import {App} from './app';
-//import logo from "./logo.png";
-import React, {useState} from "react";
-import {products} from "./products"
-//import {Categories} from "./Categories"
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import BrowseView from './scripts';
 
-function BrowseView() {
-    return (
-    <div >
-    {products[0].description}
-    </div>
-    );
-    }
-    export default App;
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+<React.StrictMode>
+<BrowseView />
+</React.StrictMode>
+);

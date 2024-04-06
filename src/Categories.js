@@ -1,0 +1,1 @@
+export const Categories = ["Shirts", "Shoes", "Dressware", "Resort"];

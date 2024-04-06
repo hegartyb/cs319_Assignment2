@@ -6,7 +6,6 @@ export const products = [
     "description": "Yellow and Black Checkered Button Down Shirt.",
     "category": "Shirts",
     "image": "https://images.pexels.com/photos/1337477/pexels-photo-1337477.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "rating": { "rate": 3.9, "count": 120 }
   },
   {
     "id": 2,
@@ -15,7 +14,6 @@ export const products = [
     "description": "Professional Light Blue Collared Button Down.",
     "category": "Shirts",
     "image": "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "rating": { "rate": 3.9, "count": 120 }
   },
   {
     "id": 3,
@@ -24,7 +22,6 @@ export const products = [
     "description": "All Red Casual / Athletic Sneakers.",
     "category": "Shoes",
     "image": "https://images.pexels.com/photos/1306248/pexels-photo-1306248.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "rating": { "rate": 3.9, "count": 120 }
   },
   {
     "id": 4,
@@ -33,7 +30,6 @@ export const products = [
     "description": "Monotone Maroon Jacket and Pants Suit Combination.",
     "category": "Dressware",
     "image": "https://images.pexels.com/photos/1300550/pexels-photo-1300550.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "rating": { "rate": 3.9, "count": 120 }
   },
   {
     "id": 5,
@@ -42,7 +38,6 @@ export const products = [
     "description": "Hawaiian Floral Short Sleeve Button Down.",
     "category": "Resort",
     "image": "https://images.pexels.com/photos/2897531/pexels-photo-2897531.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "rating": { "rate": 3.9, "count": 120 }
   },
   {
     "id": 6,
@@ -51,7 +46,6 @@ export const products = [
     "description": "Mild Green Two Piece Suit.",
     "category": "Dressware",
     "image": "https://images.pexels.com/photos/1321943/pexels-photo-1321943.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "rating": { "rate": 3.9, "count": 120 }
   }
   
 ]
