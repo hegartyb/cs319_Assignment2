@@ -1,9 +1,4 @@
-/*TODO
-*Browser
-*Pop-up cart
-*Pop-up payment information
-*Video
-*/
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
