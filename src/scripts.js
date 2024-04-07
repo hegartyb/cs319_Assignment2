@@ -1,12 +1,24 @@
 import {products} from "./products";
 import './app.css';
 import logo from "./logo.png";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {useForm} from "react-hook-form";
 
 
-function PaymentScreen({setIsPaymentScreenVisible}) {
+function PaymentScreen({closeAndEmpty, cart, products}) {
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [totalCost, setTotalCost] = useState(0);
+
+  useEffect(() => {
+    let newTotal = 0;
+    Object.keys(cart).forEach(productId => {
+        const product = products.find(p => p.id === parseInt(productId));
+        if (product) {
+            newTotal += (cart[productId] * product.price);
+        }
+    });
+    setTotalCost(newTotal);
+  }, [cart, products]);
 
   const toggleConfirmation = () => {
     setShowConfirmation(!showConfirmation);
@@ -15,8 +27,7 @@ function PaymentScreen({setIsPaymentScreenVisible}) {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = data => {
-    console.log(data); // Handle form submission here
-    //setIsPaymentScreenVisible(false); // Close the payment screen after submission
+    console.log(data); 
     toggleConfirmation();
   };
 
@@ -50,13 +61,12 @@ function PaymentScreen({setIsPaymentScreenVisible}) {
         </form>
       </div>
       {showConfirmation && (
-        //TODO
         <div id="myPopup" className="popup">
           <div className="popup-content">
-            <h3>Purchased Items</h3>
-            
+            <h3>Payment Successful!</h3>
+            <h3>Total Cost: ${totalCost.toFixed(2)}</h3>
           </div>
-          <button onClick={() => setIsPaymentScreenVisible(false)}>Close</button>
+          <button onClick={() => closeAndEmpty()}>Close</button>
         </div>
       )}
     </div>
@@ -82,8 +92,8 @@ const render_products = (ProductsCategory, addToCart, removeFromCart) => {
         <div className="flex justify-between p-3" style={{ display: 'flex', alignItems: 'center', justifyContent:'flex-end'}}>
           <p className="text-sm font-medium text-green-600" style = {{fontSize: '2.0rem'}}>${product.price}</p>
           <div style={{ marginLeft: 'auto' }}>
-            <button onClick={() => addToCart(product.id)} style={{ width: '100px', height: '40px', fontSize: '1rem', backgroundColor: '#eee', border: '1px solid #ccc', borderRadius: '5px', marginRight: '10px' }}>+</button>
-            <button onClick={() => removeFromCart(product.id)} style={{ width: '100px', height: '40px', fontSize: '1rem', backgroundColor: '#eee', border: '1px solid #ccc', borderRadius: '5px' }}>-</button>
+            <button onClick={() => addToCart(product.id)} style={{ width: '100px', height: '40px', fontSize: '1rem', backgroundColor: 'green', border: '1px solid #ccc', borderRadius: '5px', marginRight: '10px' }}>+</button>
+            <button onClick={() => removeFromCart(product.id)} style={{ width: '100px', height: '40px', fontSize: '1rem', backgroundColor: 'red', border: '1px solid #ccc', borderRadius: '5px' }}>-</button>
           </div>
         </div>
         <div className="text-center" style = {{textAlign: 'center'}}>
@@ -109,10 +119,24 @@ const BrowseView = () => {
     const [query, setQuery] = useState('');
     const [isPaymentScreenVisible, setIsPaymentScreenVisible] = useState(false);
 
+    
+    const closePaymentScreenAndEmptyCart = () => {
+      setIsPaymentScreenVisible(false);
+      setCart({});
+    };
+
     const addToCart = (productId) => {
         const updatedCart = { ...cart };
-        updatedCart[productId] = (updatedCart[productId] || 0) + 1;
-        setCart(updatedCart);
+        const product = products.find(p => p.id === productId);
+
+        if(product) {
+          updatedCart[productId] = (updatedCart[productId] || 0) + 1;
+          setCart(updatedCart);
+        }
+        
+        else {
+          console.error("Product does not exist with given ID");
+        }
     };
 
     const removeFromCart = (productId) => {
@@ -146,32 +170,39 @@ const BrowseView = () => {
           {Object.entries(cart).length === 0 ? (
             <p>Your cart is empty.</p>
           ) : (
-            Object.entries(cart).map(([productId, quantity]) => (
-              <div key={productId} style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "10px",
-                paddingBottom: "10px",
-                borderBottom: "1px solid #f0f0f0"
-              }}>
-                <div>
-                  <span style={{ fontWeight: "bold" }}>Product ID:</span> {productId} <br />
-                  <span style={{ fontWeight: "bold" }}>Quantity:</span> {quantity}
-                </div>
-                <button onClick={() => removeFromCart(productId)} style={{
-                  backgroundColor: "#ff4d4f",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  padding: "5px 10px",
-                  cursor: "pointer",
-                  fontWeight: "bold"
+            Object.entries(cart).map(([productId, quantity]) => {
+              // Find the product to get its details
+              const product = products.find(product => product.id.toString() === productId);
+              // If product is found, display it along with its price and quantity
+              return product ? (
+                <div key={productId} style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                  paddingBottom: "10px",
+                  borderBottom: "1px solid #f0f0f0"
                 }}>
-                  Remove
-                </button>
-              </div>
-            ))
+                  <div>
+                    <span style={{ fontWeight: "bold" }}>Product ID:</span> {productId} <br />
+                    <span style={{ fontWeight: "bold" }}>Quantity:</span> {quantity} <br/>
+                    {/* Displaying the price */}
+                    <span style={{ fontWeight: "bold" }}>Price:</span> ${product.price}
+                  </div>
+                  <button onClick={() => removeFromCart(productId)} style={{
+                    backgroundColor: "#ff4d4f",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    padding: "5px 10px",
+                    cursor: "pointer",
+                    fontWeight: "bold"
+                  }}>
+                    Remove
+                  </button>
+                </div>
+              ) : null;
+            })
           )}
           <button onClick={() => setIsPaymentScreenVisible(true)} style={{
             backgroundColor: "blue",
@@ -182,12 +213,18 @@ const BrowseView = () => {
             cursor: "pointer",
             fontWeight: "bold"
           }}>
-          Payment
+            Payment
           </button>
-          {isPaymentScreenVisible && <PaymentScreen setIsPaymentScreenVisible={setIsPaymentScreenVisible} />}
+          {isPaymentScreenVisible && <PaymentScreen 
+                                        closeAndEmpty={closePaymentScreenAndEmptyCart}
+                                        cart={cart}
+                                        products={products}
+                                      />
+          }
         </div>
       );
     };
+    
       
 
       
